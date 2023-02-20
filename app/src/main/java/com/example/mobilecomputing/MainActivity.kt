@@ -1,7 +1,14 @@
 package com.example.mobilecomputing
 
+import android.Manifest
+import android.Manifest.permission.RECORD_AUDIO
 import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
+import android.speech.RecognizerIntent
+import android.speech.SpeechRecognizer
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
@@ -12,13 +19,22 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.mobilecomputing.ui.login.LoginScreen
 import com.example.mobilecomputing.ui.theme.MobileComputingTheme
 import com.example.mobilecomputing.CheckPrefCredentials
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import android.app.Activity
 
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        val recordAudioRequestCode = 1001
+
+
 
         val adsasd = CheckPrefCredentials(this)
         adsasd.createAccount(this, "", "")
@@ -26,34 +42,19 @@ class MainActivity : ComponentActivity() {
 
         val paskacontext = this
         super.onCreate(savedInstanceState)
+
+        val paskactivity = this
+
         setContent {
             MobileComputingTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background) {
                     Column {
-                        MobileComputingApp(modifier = Modifier.fillMaxSize(), paskacontext)
+                        MobileComputingApp(modifier = Modifier.fillMaxSize(), paskacontext, paskactivity)
                     }
                 }
             }
         }
     }
 
-}
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "JOUUUU $name!")
-}
-
-@Composable
-fun Greeting2(name: String) {
-    Text(text = "HAISTA vittU $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MobileComputingTheme {
-        Greeting("Android")
-    }
 }

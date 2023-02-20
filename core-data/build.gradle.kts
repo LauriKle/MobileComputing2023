@@ -1,6 +1,8 @@
 plugins {
     id("com.android.library")
+    id("com.google.dagger.hilt.android")
     kotlin("android")
+    kotlin("kapt")
 }
 
 android {
@@ -34,14 +36,18 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":core-domain"))
+    implementation(project(":core-database"))
     implementation(androidx.core.ktx)
 
+    // Hilt for DI
+    implementation("com.google.dagger:hilt-android:2.44.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
     //coroutines
     implementation(kotlinx.coroutines.android.android)
     implementation(kotlinx.coroutines.core.core)
-    implementation(project(mapOf("path" to ":core-domain")))
-    implementation(project(mapOf("path" to ":core-database")))
+   // implementation(project(mapOf("path" to ":core-domain")))
+    //implementation(project(mapOf("path" to ":core-database")))
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

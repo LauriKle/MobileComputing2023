@@ -2,11 +2,10 @@
 
 plugins {
     id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-   // kotlin("android")
+    id("com.google.dagger.hilt.android")
+    kotlin("android")
     kotlin("kapt")
 }
-
 android {
     namespace = "com.mobilecomputing.core_database"
     compileSdk = sdk.compile
@@ -38,14 +37,18 @@ android {
 }
 
 dependencies {
-    implementation(project(":core-domain"))
-    implementation(project(":core-database"))
+   // implementation(project(":core-domain"))
+    //implementation(project(":core-database"))
+
+    // Hilt for DI
+    implementation("com.google.dagger:hilt-android:2.44.2")
+    kapt("com.google.dagger:hilt-android-compiler:2.44")
 
     implementation(androidx.core.ktx)
     //room
     implementation("androidx.room:room-ktx:2.4.3")
     implementation("androidx.room:room-runtime:2.4.3")
-    kapt("androidx.room:room-compiler:2.4.3")
+    kapt("androidx.room:room-compiler:2.5.0")
 
     //Coroutines
     implementation(kotlinx.coroutines.android.android)
@@ -54,4 +57,8 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+}
+
+kapt {
+    correctErrorTypes = true
 }

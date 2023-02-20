@@ -22,8 +22,6 @@ import com.example.mobilecomputing.CheckPrefCredentials
 import com.example.mobilecomputing.R
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
-import com.example.mobilecomputing.feikki_profiili
-
 @Composable
 fun LoginScreen(
     modifier: Modifier,
@@ -103,7 +101,7 @@ fun LoginScreen(
 
 fun checkLogin(usrnm:String, passwd:String, context:Context) : Boolean {
     val adsasd = CheckPrefCredentials(context)
-    val succ = adsasd.checkCredentials(context, passwd ,usrnm)
+    val succ = adsasd.checkCredentials(context, usrnm, passwd)
     //val succ = (passwd == feikki_profiili.password && usrnm == feikki_profiili.username)
     return succ
 }
