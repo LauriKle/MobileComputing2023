@@ -22,6 +22,8 @@ import com.example.mobilecomputing.CheckPrefCredentials
 import com.example.mobilecomputing.R
 import org.intellij.lang.annotations.JdkConstants.HorizontalAlignment
 
+import com.mobilecomputing.core_domain.entity.Reminder
+
 @Composable
 fun LoginScreen(
     modifier: Modifier,
@@ -90,6 +92,18 @@ fun LoginScreen(
         Button(
             onClick = {
                     navController.navigate("createAccount")
+                val reminder =                     Reminder(
+                    message = "haista vittu",
+                    location_x = "111",
+                    location_y = "222",
+                    reminder_time = "10:10:10",
+                    creation_time = "10:10:10",
+                    creator_id = "adsasdasd",
+                    reminder_seen = false,
+                    emoji = "🍕",
+                )// get the reminder object from the database
+                //val notificationId = reminder.id.toInt()
+
             },
             modifier = Modifier.fillMaxWidth().height(48.dp),
             shape = RoundedCornerShape(24.dp)

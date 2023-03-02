@@ -10,9 +10,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +26,11 @@ import com.example.mobilecomputing.Paska
 import com.example.mobilecomputing.ui.home.reminder.ReminderViewModel
 import com.example.mobilecomputing.ui.home.reminder.ReminderViewState
 import com.mobilecomputing.core_domain.entity.Reminder
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 
+//var showAllReminders = false
 
 @Composable
 fun HomeScreen(
@@ -36,6 +39,7 @@ fun HomeScreen(
     //paskaList: List<Paska>,
     viewModel: ReminderViewModel = hiltViewModel(),
 ) {
+    var showAllReminders by remember { mutableStateOf(false) }
     Scaffold(
         modifier = Modifier.padding(bottom = 24.dp),
         topBar = {
@@ -47,7 +51,18 @@ fun HomeScreen(
                         ) {
                             Icon(
                                 imageVector = Icons.Filled.Settings,
-                                contentDescription = "Open Navigation Drawer"
+                                contentDescription = "Open profile screen"
+                            )
+                        }
+                        IconButton(
+                            onClick = {
+                                showAllReminders = !showAllReminders
+                                println("######" + showAllReminders)
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Star,
+                                contentDescription = "Switch showing all reminders on or off"
                             )
                         }
                     },
@@ -80,17 +95,18 @@ fun HomeScreen(
     ) {
         ReminderList(
             reminderViewModel = viewModel,
-            NavController = navController
+            NavController = navController,
+            showAllReminders = showAllReminders
         )
     }
     }
 }
 
-
 @Composable
 private fun ReminderList(
     reminderViewModel: ReminderViewModel,
-    NavController: NavController
+    NavController: NavController,
+    showAllReminders: Boolean
 ) {
     reminderViewModel.loadReminders()
     val reminderViewState by reminderViewModel.uiState.collectAsState()
@@ -105,12 +121,29 @@ private fun ReminderList(
                 contentPadding = PaddingValues(0.dp),
                 verticalArrangement = Arrangement.Center
             ) {
-                items(reminderList) { item ->
+                items(reminderList.filter { reminder ->
+                    val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                    try {
+                        val reminderTime = dateFormat.parse(reminder.reminder_time) ?: return@filter false
+                        val reminderCalendar = Calendar.getInstance().apply {
+                            time = reminderTime
+                        }
+                        if (showAllReminders) {
+                            true
+                        } else {
+                            reminderCalendar.timeInMillis < Calendar.getInstance().timeInMillis
+                        }
+                    } catch (e: ParseException) {
+                        //Time value is invalid, showing it would cause a crash.
+                        false
+                    }
+                }) { item ->
                     ReminderListItem(
                         reminder = item,
                         onClick = {},
                         navController = NavController
                     )
+
                 }
             }
         }

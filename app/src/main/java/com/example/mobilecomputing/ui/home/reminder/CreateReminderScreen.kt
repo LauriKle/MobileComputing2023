@@ -42,6 +42,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.mobilecomputing.CheckPrefCredentials
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.mobilecomputing.ui.createWork
 
 @Composable
 fun CreateReminderScreen(
@@ -57,15 +58,9 @@ fun CreateReminderScreen(
     val reminderTime = remember { mutableStateOf("") }
     val emojis = listOf("😊", "🍕", "⏰", "🎉", "💩")
     var selectedEmoji by remember { mutableStateOf("") }
+    val notifyUser = remember { mutableStateOf(false) }
 
     val recordAudioRequestCode = 1001
-
-    //if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-    //    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-    //        ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.RECORD_AUDIO), recordAudioRequestCode)
-   //     }
-    //}
-
     val speechRecognizer = remember { SpeechRecognizer.createSpeechRecognizer(context) }
     val speechRecognizerIntent = remember {
         Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
@@ -75,9 +70,8 @@ fun CreateReminderScreen(
           //  putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 1000)
         }
     }
-
     var isListening by remember { mutableStateOf(false) }
-    var recognizedText by remember { mutableStateOf("") }
+    var messageText by remember { mutableStateOf("") }
 
     Column(
         modifier = modifier.padding(25.dp),
@@ -114,7 +108,7 @@ fun CreateReminderScreen(
                     }
                     override fun onResults(results: Bundle?) {
                         val text = results?.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION)?.get(0)
-                        recognizedText = text ?: ""
+                        messageText += " $text"
                         isListening = false
                     }
                     override fun onPartialResults(partialResults: Bundle?) {}
@@ -130,12 +124,12 @@ fun CreateReminderScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
-        reminderName.value = recognizedText
+        //reminderName.value = recognizedText
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             label = { Text("Message") },
-            value = reminderName.value,
-            onValueChange = { text -> if (!isListening) reminderName.value = text },
+            value = messageText,
+            onValueChange = { messageText = it },
             shape = RoundedCornerShape(24.dp)
         )
 
@@ -170,27 +164,44 @@ fun CreateReminderScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(vertical = 8.dp)
+        ) {
+            Checkbox(
+                checked = notifyUser.value,
+                onCheckedChange = { notifyUser.value = it },
+                modifier = Modifier.padding(end = 8.dp)
+            )
+            Text(text = "Make a notification")
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
         Button(
             onClick = {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 val currentDateTimeString = dateFormat.format(Date())
-                viewModel.saveReminder(
-                    Reminder(
-                        message = if (isListening) recognizedText else reminderName.value,
-                        location_x = "111",
-                        location_y = "222",
-                        reminder_time = reminderTime.value,
-                        creation_time = currentDateTimeString,
-                        creator_id = usrnm,
-                        reminder_seen = false,
-                        emoji = selectedEmoji,
-                    )
+                val reminder =                     Reminder(
+                    message = messageText,
+                    location_x = "111",
+                    location_y = "222",
+                    reminder_time = reminderTime.value,
+                    creation_time = currentDateTimeString,
+                    creator_id = usrnm,
+                    reminder_seen = false,
+                    emoji = selectedEmoji,
                 )
+                viewModel.saveReminder(reminder)
+                if (notifyUser.value == true) {
+                    createWork(context, reminder)
+                }
                 navController.navigate("home")
+
             },
             modifier = Modifier.fillMaxWidth().height(64.dp),
             shape = RoundedCornerShape(24.dp)
         ) {
             Text(text = "Create Reminder")
         }
-    }}
+    }
+}

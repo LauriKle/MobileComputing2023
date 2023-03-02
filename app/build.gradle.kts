@@ -67,10 +67,13 @@ dependencies {
 
     implementation(androidx.navigation.hilt.compose)
 
+    implementation("androidx.work:work-runtime:2.7.0")
+    implementation("androidx.work:work-runtime-ktx:2.7.0")
     // Hilt for DI
     implementation("com.google.dagger:hilt-android:2.44.2")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
-
+    //implementation("androidx.hilt:hilt-lifecycle-viewmodel:2.4.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation("androidx.activity:activity-compose:1.3.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

@@ -37,9 +37,9 @@ fun EditReminderScreen(
     navController: NavController,
     context: Context,
     reminderId: String,
-    message: String,
-    reminderTime: String,
-    emoji: String,
+    message: String = "",
+    reminderTime: String = "",
+    emoji: String = "",
     viewModel: ReminderViewModel = hiltViewModel(),
 )  {
 
