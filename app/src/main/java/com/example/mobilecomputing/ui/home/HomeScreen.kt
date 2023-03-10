@@ -7,10 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,7 +19,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.os.bundleOf
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.example.mobilecomputing.Paska
 import com.example.mobilecomputing.ui.home.reminder.ReminderViewModel
 import com.example.mobilecomputing.ui.home.reminder.ReminderViewState
 import com.mobilecomputing.core_domain.entity.Reminder
@@ -52,6 +48,14 @@ fun HomeScreen(
                             Icon(
                                 imageVector = Icons.Filled.Settings,
                                 contentDescription = "Open profile screen"
+                            )
+                        }
+                        IconButton(
+                            onClick = { navController.navigate("virtualLocationMap") }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.LocationOn,
+                                contentDescription = "Open virtual location map"
                             )
                         }
                         IconButton(
@@ -134,8 +138,8 @@ private fun ReminderList(
                             reminderCalendar.timeInMillis < Calendar.getInstance().timeInMillis
                         }
                     } catch (e: ParseException) {
-                        //Time value is invalid, showing it would cause a crash.
-                        false
+                        //Time value is invalid.
+                        true
                     }
                 }) { item ->
                     ReminderListItem(

@@ -81,6 +81,16 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.1.1")
     debugImplementation("androidx.compose.ui:ui-tooling:1.1.1")
     debugImplementation("androidx.compose.ui:ui-test-manifest:1.1.1")
+
+    // Maps dependencies
+    implementation("com.google.maps.android:maps-ktx:3.3.0")
+    implementation("com.google.maps.android:maps-utils-ktx:3.3.0")
+    implementation("com.google.android.gms:play-services-maps:18.0.0")
+    implementation("com.google.maps.android:android-maps-utils:2.2.3")
+    // Location
+    implementation("com.google.android.gms:play-services-maps:18.0.0")
+
+    implementation("com.google.android.gms:play-services-location:18.0.0")
 }
 
 kapt {

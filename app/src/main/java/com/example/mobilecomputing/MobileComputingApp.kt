@@ -21,25 +21,10 @@ import androidx.navigation.navArgument
 import com.example.mobilecomputing.ui.home.reminder.CreateReminderScreen
 import com.example.mobilecomputing.ui.home.reminder.EditReminderScreen
 import com.example.mobilecomputing.ui.home.reminder.ReminderViewModel
+import com.example.mobilecomputing.ui.maps.NearbyRemindersScreen
+import com.example.mobilecomputing.ui.maps.ReminderLocation
+import com.example.mobilecomputing.ui.maps.VirtualLocationMap
 
-data class Paska(
-    val id: Int,
-    val name: String,
-    val time: String,
-    val emoji : String
-)
-
-val lista = listOf(
-    Paska(123,"Aasi","17:43","\uD83D\uDC34"),
-    Paska(234,"Sika","12:12","\uD83D\uDC37"),
-    Paska(857,"Lehmä","13:00","\uD83D\uDC2E"),
-)
-
-data class Profile(
-    var username: String,
-    var password: String,
-    val id: Int,
-)
 
 @Composable
 fun MobileComputingApp(
@@ -94,6 +79,37 @@ fun MobileComputingApp(
                 reminderTime,
                 emoji
             )
+        }
+
+        composable("map") {
+            ReminderLocation(navController = appState.navController)
+        }
+        composable("virtualLocationMap") {
+            VirtualLocationMap(navController = appState.navController)
+        }
+        /*
+        composable(
+            route = "nearbyReminders/{latitude}/{longitude}",
+            arguments = listOf(
+                navArgument("lat") { type = NavType.FloatType },
+                navArgument("lng") { type = NavType.FloatType }
+            )
+        ) { backStackEntry ->
+            val latitude = backStackEntry.arguments?.getFloat("latitude") ?: 0.0F
+            val longitude = backStackEntry.arguments?.getFloat("longitude") ?: 0.0F
+            println(latitude + longitude)
+            NearbyRemindersScreen(
+                navController = appState.navController,
+                lat = latitude,
+                lng = longitude
+            )
+        }
+
+         */
+        composable("nearbyReminders/{latitude}/{longitude}") { backStackEntry ->
+            val latitude = backStackEntry.arguments?.getString("latitude")?.toDouble() ?: 0.0
+            val longitude = backStackEntry.arguments?.getString("longitude")?.toDouble() ?: 0.0
+            NearbyRemindersScreen(navController = appState.navController, latitude = latitude, longitude = longitude)
         }
     }
 }
